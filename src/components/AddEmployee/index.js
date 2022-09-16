@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../services/EmployeeService";
 
 const AddEmployee = () => {
@@ -8,6 +9,7 @@ const AddEmployee = () => {
     lastName: "",
     emailId: "",
   });
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
     console.log(name, value);
@@ -16,6 +18,15 @@ const AddEmployee = () => {
   const saveEmployee = (e) => {
     e.preventDefault();
     axiosInstance.post("/employees", employee);
+    navigate("/");
+  };
+  const handleClear = () => {
+    setEmployee({
+      id: "",
+      firstName: "",
+      lastName: "",
+      emailId: "",
+    });
   };
   return (
     <div className="flex max-w-2xl show border-b-2 mx-auto">
@@ -69,7 +80,10 @@ const AddEmployee = () => {
             </button>
           </div>
           <div>
-            <button className="rounded text-white font-semibold bg-red-400 hover:bg-red-700 py-2 px-6">
+            <button
+              className="rounded text-white font-semibold bg-red-400 hover:bg-red-700 py-2 px-6"
+              onClick={() => handleClear()}
+            >
               Cancel
             </button>
           </div>
