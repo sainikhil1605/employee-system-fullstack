@@ -11,6 +11,15 @@ const EmployeeList = () => {
       console.log(employees);
     });
   }, []);
+  const deleteEmployee = (e, id) => {
+    e.preventDefault();
+    axiosInstance.delete(`/employees/${id}`).then((res) => {
+      console.log(res);
+      setEmployees((employees) =>
+        employees.filter((employee) => employee.id !== id)
+      );
+    });
+  };
   return (
     <div className="container m-auto my-8">
       <div className="h-12">
@@ -40,8 +49,8 @@ const EmployeeList = () => {
             </tr>
           </thead>
           <tbody>
-            {employees?.map(({ firstName, lastName, emailId }) => (
-              <tr>
+            {employees?.map(({ id, firstName, lastName, emailId }) => (
+              <tr key={id}>
                 <td className="text-left px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-500">{firstName}</div>
                 </td>
@@ -52,10 +61,16 @@ const EmployeeList = () => {
                   <div className="text-sm text-gray-500">{emailId}</div>
                 </td>
                 <td text-right px-6 py-4 whitespace-nowrap>
-                  <a href="#" className="text-indigo-600 px-4">
+                  <a
+                    href="#"
+                    className="text-indigo-600 px-4 hover:cursor-pointer"
+                  >
                     Edit
                   </a>
-                  <a className="text-indigo-600 px-4" href="#">
+                  <a
+                    className="text-indigo-600 px-4 hover:cursor-pointer"
+                    onClick={(e) => deleteEmployee(e, id)}
+                  >
                     Delete
                   </a>
                 </td>

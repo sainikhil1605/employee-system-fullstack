@@ -15,9 +15,9 @@ const AddEmployee = () => {
     console.log(name, value);
     setEmployee((prevState) => ({ ...prevState, [name]: value }));
   };
-  const saveEmployee = (e) => {
+  const saveEmployee = async (e) => {
     e.preventDefault();
-    axiosInstance.post("/employees", employee);
+    await axiosInstance.post("/employees", employee);
     navigate("/");
   };
   const handleClear = () => {
