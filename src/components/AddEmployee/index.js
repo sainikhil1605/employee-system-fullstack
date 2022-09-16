@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "../../services/EmployeeService";
 
 const AddEmployee = () => {
@@ -10,16 +10,34 @@ const AddEmployee = () => {
     emailId: "",
   });
   const navigate = useNavigate();
+  const location = useLocation();
+  const params = useParams();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setEmployee((prevState) => ({ ...prevState, [name]: value }));
   };
   const saveEmployee = async (e) => {
     e.preventDefault();
-    await axiosInstance.post("/employees", employee);
+    if (location?.pathname?.indexOf("editEmployee") >= 0) {
+      await axiosInstance
+        .put(`/employees/${params.id}`, employee)
+        .then((res) => {
+          console.log(res);
+        });
+    } else {
+      await axiosInstance.post("/employees", employee);
+    }
+
     navigate("/");
   };
+  useEffect(() => {
+    if (location?.pathname?.indexOf("editEmployee") >= 0) {
+      axiosInstance.get(`/employees/${params.id}`).then((res) => {
+        setEmployee({ ...res.data });
+      });
+    }
+  }, []);
   const handleClear = () => {
     setEmployee({
       id: "",
@@ -32,7 +50,10 @@ const AddEmployee = () => {
     <div className="flex max-w-2xl show border-b-2 mx-auto">
       <div className="px-8 py-8">
         <div className="font-thin text-2xl">
-          <h1>Add New Employee</h1>
+          <h1>
+            {location?.pathname?.indexOf("editEmployee") ? "Edit " : "Add New"}
+            Employee
+          </h1>
         </div>
         <div className="items-center justify-center h-14 w-full my-4">
           <label className="block text-gray-600 text-sm font-normal">

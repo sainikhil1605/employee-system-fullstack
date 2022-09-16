@@ -62,7 +62,7 @@ const EmployeeList = () => {
                 </td>
                 <td text-right px-6 py-4 whitespace-nowrap>
                   <a
-                    href="#"
+                    onClick={(e) => navigate(`/editEmployee/${id}`)}
                     className="text-indigo-600 px-4 hover:cursor-pointer"
                   >
                     Edit
